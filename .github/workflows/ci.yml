@@ -28,7 +28,7 @@ jobs:
         run: dotnet test learningprojectserver.sln --no-build
 
       - name: Publish application
-        run: dotnet publish learningprojectserver/learningprojectserver.csproj -c Release -o ./publish
+        run: dotnet publish learningprojectserver.csproj -c Release -o ./publish
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
