@@ -23,3 +23,15 @@ jobs:
 
       - name: Build
         run: dotnet build learningprojectserver.sln --no-restore
+
+      - name: Run tests
+        run: dotnet test learningprojectserver.sln --no-build
+
+      - name: Publish application
+        run: dotnet publish learningprojectserver/learningprojectserver.csproj -c Release -o ./publish
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: learningprojectserver
+          path: ./publish
