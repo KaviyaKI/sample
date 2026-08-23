@@ -1,4 +1,4 @@
-﻿name: .NET CI
+﻿name: .NET CI/CD
 
 on:
   push:
@@ -6,6 +6,9 @@ on:
       - main
 
 jobs:
+  # =========================
+  # CI - Build and Test
+  # =========================
   build:
     runs-on: ubuntu-latest
 
@@ -35,3 +38,31 @@ jobs:
         with:
           name: learningprojectserver
           path: ./publish
+
+
+  # =========================
+  # CD - Deploy to Windows
+  # =========================
+  deploy:
+    needs: build
+    runs-on: self-hosted
+
+    steps:
+      - name: Download published artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: learningprojectserver
+          path: ./publish
+
+      - name: Deploy application
+        shell: powershell
+        run: |
+          $deployPath = "C:\Deployments\learningprojectserver"
+
+          if (!(Test-Path $deployPath)) {
+              New-Item -ItemType Directory -Path $deployPath -Force
+          }
+
+          Copy-Item ".\publish\*" $deployPath -Recurse -Force
+
+          Write-Host "Application deployed successfully to $deployPath"
